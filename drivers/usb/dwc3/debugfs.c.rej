@@ -1,0 +1,10 @@
+--- drivers/usb/dwc3/debugfs.c
++++ drivers/usb/dwc3/debugfs.c
+@@ -928,7 +912,6 @@ void dwc3_debugfs_init(struct dwc3 *dwc)
+ 				&dwc3_testmode_fops);
+ 		debugfs_create_file("link_state", 0644, root, dwc,
+ 				    &dwc3_link_state_fops);
+-		dwc3_debugfs_create_endpoint_dirs(dwc, root);
+ 	}
+ }
+ 

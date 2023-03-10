@@ -1,0 +1,11 @@
+--- drivers/iio/imu/adis16475.c
++++ drivers/iio/imu/adis16475.c
+@@ -1303,8 +1306,6 @@ static int adis16475_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	adis16475_enable_irq(&st->adis, false);
+-
+ 	ret = devm_iio_device_register(&spi->dev, indio_dev);
+ 	if (ret)
+ 		return ret;

@@ -1,0 +1,20 @@
+--- scripts/kernel-doc
++++ scripts/kernel-doc
+@@ -1397,7 +1404,7 @@ sub dump_enum($$) {
+ 	$members = $2;
+     }
+ 
+-    if ($declaration_name) {
++    if ($members) {
+ 	my %_members;
+ 
+ 	$members =~ s/\s+$//;
+@@ -1438,7 +1445,7 @@ sub dump_enum($$) {
+     }
+ }
+ 
+-my $typedef_type = qr { ((?:\s+[\w\*]+){1,8})\s* }x;
++my $typedef_type = qr { ((?:\s+[\w\*]+\b){1,8})\s* }x;
+ my $typedef_ident = qr { \*?\s*(\w\S+)\s* }x;
+ my $typedef_args = qr { \s*\((.*)\); }x;
+ 
