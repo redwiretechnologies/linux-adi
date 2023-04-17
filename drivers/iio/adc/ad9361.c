@@ -9076,7 +9076,6 @@ static struct ad9361_phy_platform_data
 	/* Digital tune after modifying the sampling rate */
 	ad9361_of_get_bool(iodev, np, "adi,bb-clk-change-dig-tune-enable",
 			&pdata->bb_clk_change_dig_tune_en);
-
 	return pdata;
 }
 #else
@@ -9541,7 +9540,7 @@ static int ad9361_probe(struct spi_device *spi)
 	phy->bin_gt.read = ad9361_gt_bin_read;
 	phy->bin_gt.size = 16384;
 
-	indio_dev->dev.parent = &spi->dev;
+	indio_dev->dev.parent = &spi->dev;  //May need to be removed
 
 	if (spi->dev.of_node)
 		indio_dev->name = spi->dev.of_node->name;
@@ -9606,7 +9605,8 @@ static int ad9361_remove(struct spi_device *spi)
 	clk_notifier_unregister(phy->clks[RX_RFPLL], &phy->clk_nb_rx);
 	clk_notifier_unregister(phy->clks[TX_RFPLL], &phy->clk_nb_tx);
 	ad9361_clks_disable(phy);
-
+    udelay(100);
+    //kfree(phy->pdata);  This may need to be added back
 	return 0;
 }
 

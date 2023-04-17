@@ -374,9 +374,12 @@ static int ad9361_populate_settings(struct device *dev,
 		if (ret < 0) {
 			dev_err(dev, "Error while parsing '%s': %d\n",
 				child->name, ret);
+            of_node_put(child);
 			return ret;
 		}
+		
 		list_add_tail(&new->list, lst);
+        of_node_put(child);
 	}
 
 	return cnt;
@@ -404,6 +407,7 @@ static int ad9361_populate_hooks(struct device *dev,
 			return -ENOMEM;
 
 		ret = ad9361_parse_setting(dev, child, ctl, ctl->hooks[i], NULL);
+        of_node_put(child);
 		if (ret < 0)
 			return ret;
 	}

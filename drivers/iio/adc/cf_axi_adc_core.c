@@ -1054,7 +1054,6 @@ int axiadc_append_attrs(struct iio_dev *indio_dev,
 static void axiadc_release_converter(void *conv)
 {
 	struct device *dev = conv;
-
 	put_device(dev);
 	module_put(dev->driver->owner);
 }
@@ -1081,6 +1080,7 @@ static int axiadc_probe(struct platform_device *pdev)
 	unsigned int config, skip = 1;
 	int ret;
 
+    udelay(100);
 	dev_dbg(&pdev->dev, "Device Tree Probing \'%s\'\n",
 		 pdev->dev.of_node->name);
 
@@ -1093,6 +1093,7 @@ static int axiadc_probe(struct platform_device *pdev)
 	/* Defer driver probe until matching spi
 	 * converter driver is registered
 	 */
+
 	axiadc_spidev.of_nspi = of_parse_phandle(pdev->dev.of_node,
 						 "spibus-connected", 0);
 	if (!axiadc_spidev.of_nspi) {
@@ -1102,13 +1103,16 @@ static int axiadc_probe(struct platform_device *pdev)
 
 	ret = bus_for_each_dev(&spi_bus_type, NULL, &axiadc_spidev,
 			       axiadc_attach_spi_client);
-	if (ret == 0)
+    
+    of_node_put(axiadc_spidev.of_nspi);
+    
+    if (ret == 0)
 		return -EPROBE_DEFER;
 
 	if (!try_module_get(axiadc_spidev.dev_spi->driver->owner))
 		return -ENODEV;
 
-	get_device(axiadc_spidev.dev_spi);
+    get_device(axiadc_spidev.dev_spi);
 
 	ret = devm_add_action_or_reset(&pdev->dev, axiadc_release_converter, axiadc_spidev.dev_spi);
 	if (ret)
@@ -1229,9 +1233,9 @@ static int axiadc_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-	ret = iio_device_register(indio_dev);
+	ret = devm_iio_device_register(&pdev->dev,indio_dev);
 	if (ret)
-		return ret;
+        return ret;
 
 	if (iio_get_debugfs_dentry(indio_dev))
 		debugfs_create_file("pseudorandom_err_check", 0644,
