@@ -289,9 +289,9 @@ static int cdns_spi_setup_transfer(struct spi_device *spi,
 
 	cdns_spi_config_clock_freq(spi, transfer);
 
-	dev_dbg(&spi->dev, "%s, mode %d, %u bits/w, %u clock speed\n",
-		__func__, spi->mode, spi->bits_per_word,
-		xspi->speed_hz);
+	//dev_dbg(&spi->dev, "%s, mode %d, %u bits/w, %u clock speed\n",
+	//	__func__, spi->mode, spi->bits_per_word,
+	//	xspi->speed_hz);
 
 	return 0;
 }
